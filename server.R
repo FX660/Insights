@@ -142,10 +142,36 @@ shinyServer(function(input, output, session) {
   ### outputs
   #
   # chart.Posn
+  counter_ts <- rep(0, times=6)
   output$chartPosn <- renderPlot({
     if(!is.null(input$symbol) && input$symbol[1] != "") {
-      dateSubset <- format(as.Date(input$dateRange), format="%Y%m%d")
-      dateSubset <- paste(dateSubset, collapse="/")
+      dateSubset <- as.Date(input$dateRange)
+      if(input$btn1M_ts > counter_ts[1]) {
+        counter_ts[1] <<- counter_ts[1] + 1
+        dateSubset[1] <- seq(dateSubset[2], length=2, by="-1 months")[2]
+        updateSliderInput(session, inputId="dateRange", value=as.numeric(dateSubset))
+      } else if(input$btn6M_ts > counter_ts[2]) {
+        counter_ts[2] <<- counter_ts[2] + 1
+        dateSubset[1] <- seq(dateSubset[2], length=2, by="-6 months")[2]
+        updateSliderInput(session, inputId="dateRange", value=as.numeric(dateSubset))
+      } else if(input$btnYTD_ts > counter_ts[3]) {
+        counter_ts[3] <<- counter_ts[3] + 1
+        dateSubset[1] <- as.Date(paste0(format(dateSubset[2], format="%Y"), "-01-01"))
+        updateSliderInput(session, inputId="dateRange", value=as.numeric(dateSubset))
+      } else if(input$btn1Y_ts > counter_ts[4]) {
+        counter_ts[4] <<- counter_ts[4] + 1
+        dateSubset[1] <- seq(dateSubset[2], length=2, by="-1 years")[2]
+        updateSliderInput(session, inputId="dateRange", value=as.numeric(dateSubset))
+      } else if(input$btn5Y_ts > counter_ts[5]) {
+        counter_ts[5] <<- counter_ts[5] + 1
+        dateSubset[1] <- seq(dateSubset[2], length=2, by="-5 years")[2]
+        updateSliderInput(session, inputId="dateRange", value=as.numeric(dateSubset))
+      } else if(input$btnMax_ts > counter_ts[6]) {
+        counter_ts[6] <<- counter_ts[6] + 1
+        dateSubset[1] <- as.Date(dateRange[1])
+        updateSliderInput(session, inputId="dateRange", value=as.numeric(dateSubset))
+      }
+      dateSubset <- paste(format(dateSubset, format="%Y%m%d"), collapse="/")
       par(mfrow=c(length(input$symbol), 1))
       for(symbol in input$symbol)
         chart.Posn(input$portfolio, Symbol=symbol, Dates=dateSubset)

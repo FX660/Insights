@@ -32,8 +32,16 @@ shinyUI(
                                           )
                                         ), #end fluidRow
                                         # date slider
+                                        # date slider
                                         sliderInput("dateRange", label="Date range", min=dateRange[1],
-                                                    max=dateRange[2], value=dateRange, step=1)
+                                                    max=dateRange[2], value=dateRange, step=1),
+                                        # 1M, 6M, YTD, 1Y, 5Y, Max
+                                        actionButton("btn1M_ts", label="1M"),
+                                        actionButton("btn6M_ts", label="6M"),
+                                        actionButton("btnYTD_ts", label="YTD"),
+                                        actionButton("btn1Y_ts", label="1Y"),
+                                        actionButton("btn5Y_ts", label="5Y"),
+                                        actionButton("btnMax_ts", label="Max")
                           ), #end absolutePanel
                           plotOutput("chartPosn", width="100%", height="100%")
                       ) #end div
