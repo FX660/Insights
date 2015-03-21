@@ -1,6 +1,6 @@
 
 shinyServer(function(input, output, session) {
-  
+
   ### inputs
   #
   ## chart.Posn
@@ -8,7 +8,7 @@ shinyServer(function(input, output, session) {
   # portfolios
   observe({
     portfolios <- if (is.null(input$account) || input$account == "") {
-      character(0) 
+      character(0)
     } else {
       sort(names(getAccount(input$account)$portfolios))
     }
@@ -16,7 +16,7 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, inputId="portfolio", choices=portfolios,
                       selected=stillSelected)
   })
-  
+
   # symbols
   observe({
     symbols <- if (is.null(input$portfolio) || input$portfolio == "") {
@@ -28,25 +28,25 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, inputId="symbol", choices=symbols,
                       selected=stillSelected)
   })
-  
+
   # dates
   observe({
     dates <- if (is.null(input$portfolio) || input$portfolio == "") {
       dateRange
     } else {
-      as.numeric(c(as.Date(start(getPortfolio(input$portfolio)$summary)), 
+      as.numeric(c(as.Date(start(getPortfolio(input$portfolio)$summary)),
                    as.Date(end(getPortfolio(input$portfolio)$summary))))
     }
     updateSliderInput(session, inputId="dateRange", value=dates)
   })
-  
-  
+
+
   ## trade stats
   #
   # portfolios
   observe({
     portfolios <- if (is.null(input$account_ts) || input$account_ts == "") {
-      character(0) 
+      character(0)
     } else {
       sort(names(getAccount(input$account_ts)$portfolios))
     }
@@ -54,14 +54,14 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, inputId="portfolio_ts", choices=portfolios,
                       selected=stillSelected)
   })
-  
-  
+
+
   ## per trade stats
   #
   # portfolios
   observe({
     portfolios <- if (is.null(input$account_pts) || input$account_pts == "") {
-      character(0) 
+      character(0)
     } else {
       sort(names(getAccount(input$account_pts)$portfolios))
     }
@@ -69,7 +69,7 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, inputId="portfolio_pts", choices=portfolios,
                       selected=stillSelected)
   })
-  
+
   # symbols
   # TODO: fix that a symbol is displayed even though the user hasn't selected yet
   #       a portfolio and symbol
@@ -137,8 +137,8 @@ shinyServer(function(input, output, session) {
     updateSelectInput(session, inputId="symbol_eqc", choices=symbols,
                       selected=stillSelected)
   })
-  
-  
+
+
   ### outputs
   #
   # chart.Posn
@@ -151,7 +151,7 @@ shinyServer(function(input, output, session) {
         chart.Posn(input$portfolio, Symbol=symbol, Dates=dateSubset)
     }
   }, res=100)
-  
+
   # trade stats
   output$tradeStatsTable <- renderDataTable({
     if(!is.null(input$portfolio_ts) && input$portfolio_ts[1] != "") {
@@ -162,8 +162,8 @@ shinyServer(function(input, output, session) {
         tbl <- cbind(Statistic=colnames(tbl)[-1], t(tbl)[-1, ])
       return(tbl)
     }
-  }, options=list(iDisplayLength="50"))
-  
+  }, options=list(pageLength="50"))
+
   # per trade stats
   output$perTradeStatsTable <- renderDataTable({
     if(!is.null(input$symbol_pts) && input$symbol_pts[1] != "") {
@@ -174,7 +174,7 @@ shinyServer(function(input, output, session) {
       return(tbl)
     }
   })
-  
+
   # chart.ME
   output$chartME <- renderPlot({
     if(!is.null(input$symbol_me) && input$symbol_me[1] != "") {
@@ -184,7 +184,7 @@ shinyServer(function(input, output, session) {
         chart.ME(input$portfolio_me, Symbol=symbol, type=input$type_me, scale=input$scale_me)
     }
   }, res=100)
-  
+
   # chart.EquityCurve
   output$chartEquityCurve <- renderPlot({
     if(!is.null(input$symbol_eqc) && input$symbol_eqc[1] != "") {
