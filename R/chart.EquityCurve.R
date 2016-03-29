@@ -46,7 +46,7 @@ chart.EquityCurve <- function(Portfolio, Symbol, scale = c("cash", "tick"), ...)
   plot(cumPNL, type = "n", xlab = "Trade Number", ylab = .ylab, main= .main)
   grid()
   lines(cumPNL)
-  points(cbind(1 : length(cumPNL), cumPNL)[hwm, ], pch = 19, col = "green",
+  points(seq_along(cumPNL)[hwm], cumPNL[hwm], pch = 19, col = "green",
     cex = 0.6)
 
   legend(x = "bottomright", inset = 0.1, legend = c("Net Profit", "Peaks"),
